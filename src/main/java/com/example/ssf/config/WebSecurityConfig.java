@@ -12,19 +12,16 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 public class WebSecurityConfig {
 
     @Bean
-    public UserDetailsService userDetailsService(){
+    public UserDetailsService userDetailsService() {
         var uds = new InMemoryUserDetailsManager();
-        var u1 = User.withUsername("billy")
-                .password("1234")
-                .authorities("red")
-                .build();
+        var u1 = User.withUsername("billy").password("1234").authorities("red").build();
 
         uds.createUser(u1);
         return uds;
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return NoOpPasswordEncoder.getInstance();
     }
 
