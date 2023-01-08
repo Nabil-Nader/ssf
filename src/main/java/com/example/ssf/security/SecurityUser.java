@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 public class SecurityUser implements UserDetails {
@@ -21,7 +22,10 @@ public class SecurityUser implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         //we will skip this today, and return list of  one implementation of grandAuthority
         // later we will enhance it with roles or authorities
-        return List.of(() -> "read");
+        return user.getAuthorities()
+                .stream()
+                .map(SecurityAuthority::new)
+                .collect(Collectors.toList());
     }
 
     @Override
