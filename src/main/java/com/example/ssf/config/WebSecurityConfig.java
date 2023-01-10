@@ -1,42 +1,47 @@
 package com.example.ssf.config;
 
-import com.example.ssf.security.filter.CustomerAuthenticationFilter;
+import com.example.ssf.security.filter.ApiKeyFilter;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+
 
 @Configuration
 @AllArgsConstructor
 public class WebSecurityConfig {
 
  /*
-    our customer here do not have users, our custom just relies on key
+    since WebSecurityConfigureAdaptor is deprecated, we can no longer use
+    we can not Override AuthenticationManger  method as a bean and inject it with other
+
+    in previous we could get authentication manger and put it into the context then we could have injected it anyWhere
+    or in any Filter
   */
 
     /*
-        keep in mind that WebSecurityAdapter has been deprecated
+        as for now we will use security web filter chain
      */
 
-    private final CustomerAuthenticationFilter customerAuthenticationFilter;
+    /*
+        what is exactly HttpSecurity -> is object currently provided //todo: look for it
+     */
 
+    @Value("$(the.secret)")
+    private String key;
 
+    // we want our API to be accessible through http basic and with secret key
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        // here we will create a filter 17.44m
-        return http.addFilterAt(customerAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .authorizeRequests().anyRequest().authenticated() // we will go into this later
-                .and().build();
 
-    }
+        return http.httpBasic()
+                .and()
+                .addFilterBefore(new ApiKeyFilter(key), BasicAuthenticationFilter.class)
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
+                .build();
     }
 
 

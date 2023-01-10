@@ -28,6 +28,5 @@ public class CustomAuthenticationManager implements AuthenticationManager {
             return provider.authenticate(authentication);
         }
         throw new BadCredentialsException("Oh No!");
-
-    }
+     }
 }
