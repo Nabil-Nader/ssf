@@ -37,10 +37,18 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
+        /*
+
+        http basic is an http filter and our own filter is ApiKeyFilter
+         http filter will delegate to its own authentication manger and if we want to complete our own manger
+         we will create it
+         */
         return http.httpBasic()
                 .and()
                 .addFilterBefore(new ApiKeyFilter(key), BasicAuthenticationFilter.class)
-
+                .authorizeRequests().anyRequest().authenticated() // without this line by API can send a request and receive a 200
+                //one more thing this authorization will discuss in lesson 5
+                .and()
                 .build();
     }
 
