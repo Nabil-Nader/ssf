@@ -18,11 +18,11 @@ public class JpaUserDetailsService implements UserDetailsService {
     // we have two choise is to @ this class with @service or use it in the bean of WebSecurity 'UserDetailsService'
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-       var u = userRepository.findUserByUserName(username);
-       // we need to define a class that has a contract of userDetails
+        var u = userRepository.findUserByUserName(username);
+        // we need to define a class that has a contract of userDetails
 
 
         return u.map(SecurityUser::new)
-                .orElseThrow(() -> new UsernameNotFoundException("user name not found :"+ username));
+                .orElseThrow(() -> new UsernameNotFoundException("user name not found :" + username));
     }
 }

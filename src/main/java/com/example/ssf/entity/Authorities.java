@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -15,11 +14,11 @@ public class Authorities {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id ;
+    private int id;
 
-    private String name ;
+    private String name;
 
 
-    @ManyToMany(mappedBy ="authorities" )
+    @ManyToMany(mappedBy = "authorities")
     private Set<User> users;
 }

@@ -8,6 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 public class SecurityAuthorities implements GrantedAuthority {
 
     private final Authorities authorities;
+
     @Override
     public String getAuthority() {
         return authorities.getName();
