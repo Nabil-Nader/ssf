@@ -28,7 +28,9 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // here we will create a filter 17.44m
-        return http.addFilterAt(customerAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+        return http
+//                 we need to define where to add the filter position , second parameter is usernamePasswordAuthentication
+                .addFilterAt(customerAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests().anyRequest().authenticated() // we will go into this later
                 .and().build();
 

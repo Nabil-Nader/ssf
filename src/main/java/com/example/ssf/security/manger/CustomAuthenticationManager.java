@@ -14,6 +14,7 @@ public class CustomAuthenticationManager implements AuthenticationManager {
 
 
     /*
+    Step 2
         what will actually happen, is that from the filter 'CustomAuthenticationFilter extend OncePreRequestFilter '
         where we have 4 steps, after complete 4 step we go back to the mange
         but to have the manger here we  need to have a provider
