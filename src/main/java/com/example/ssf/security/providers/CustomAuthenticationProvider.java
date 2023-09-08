@@ -9,7 +9,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CustomAuthenticationProvider implements AuthenticationProvider {
+public class   CustomAuthenticationProvider implements AuthenticationProvider {
 
     @Value("${our.very.very.very.secret.key}")
     private String key;
