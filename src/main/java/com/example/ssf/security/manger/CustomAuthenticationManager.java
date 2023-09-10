@@ -7,7 +7,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
-@Component
 @AllArgsConstructor
 //it is recommended to make it a security authentication manager, that is why we implement it
 public class CustomAuthenticationManager implements AuthenticationManager {

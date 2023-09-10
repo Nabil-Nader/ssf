@@ -11,7 +11,6 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 
 
 @Configuration
-@AllArgsConstructor
 public class WebSecurityConfig {
 
  /*
@@ -42,6 +41,16 @@ public class WebSecurityConfig {
         http basic is an http filter and our own filter is ApiKeyFilter
          http filter will delegate to its own authentication manger and if we want to complete our own manger
          we will create it
+         */
+        /*
+            Let's look at wht is HttpSecurity,
+            is an object was previously used by extending WebSecurityConfigureAdapter.Class
+            and we override the configure method
+            spring security team changed the behavior, they decouple us using an extending a class
+            it is better to use has a relationship rather than extending class
+            Now we but a Bean in the context, and now this HTTP security parameter it has been pushed into spring context
+            being in spring context you can anytime just get it through the parameter of any bean method
+            this object create behind the scenes the entire structure
          */
         return http.httpBasic()
                 .and()

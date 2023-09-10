@@ -27,6 +27,7 @@ public class ApiKeyFilter extends OncePerRequestFilter {
 
         var requestKey = request.getHeader("x-api-key"); //x-api-key is the stander
 
+        //here to check of we have a header or not , this mean we need to delegate it for the next filter
         if ("null".equals(requestKey) || requestKey == null) {
             filterChain.doFilter(request, response);
         }
