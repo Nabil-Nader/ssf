@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
@@ -20,26 +21,6 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 @Configuration
 public class WebSecurityConfig {
 
- /*
-    since WebSecurityConfigureAdaptor is deprecated, we can no longer use
-    we can not Override AuthenticationManger  method as a bean and inject it with other
-
-    in previous we could get authentication manger and put it into the context then we could have injected it anyWhere
-    or in any Filter
-  */
-
-    /*
-        as for now we will use security web filter chain
-     */
-
-    /*
-        what is exactly HttpSecurity -> is object currently provided //todo: look for it
-     */
-
-    @Value("$(the.secret)")
-    private String key;
-
-    // we want our API to be accessible through http basic and with secret key
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
@@ -47,7 +28,7 @@ public class WebSecurityConfig {
         return http.httpBasic()
                 .and()
                 .authorizeRequests()
-                .anyRequest().permitAll()
+                .mvcMatchers("/demo/**").hasAuthority("read")
                 .and()
                 .build();
 //        Matcher method + authorization rule
@@ -57,15 +38,25 @@ public class WebSecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService (){
-        var uds = new InMemoryUserDetailsManager();
+//        class InMemoryUserDetailsManager implements UserDetailsManager, UserDetailsPasswordService
+//        interface UserDetailsManager extends UserDetailsService
+        InMemoryUserDetailsManager uds = new InMemoryUserDetailsManager();
 
-        var user  = User.withUsername("billy")
-                .password(passwordEncoder().encode("pass"))
-                .authorities("read")
-                .build();
+        UserDetails u1 = getUserDetails("billy","pass","read");
 
-        uds.createUser(user);
+
+        UserDetails u2 = getUserDetails("nader","pass","write");
+
+        uds.createUser(u1);
+        uds.createUser(u2);
         return uds;
+    }
+
+    private UserDetails getUserDetails(String name, String password,String authority) {
+        return User.withUsername(name)
+                .password(passwordEncoder().encode(password))
+                .authorities(authority)
+                .build();
     }
 
     @Bean
