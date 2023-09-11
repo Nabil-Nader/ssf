@@ -47,7 +47,7 @@ public class WebSecurityConfig {
         return http.httpBasic()
                 .and()
                 .authorizeRequests()
-                .anyRequest().authenticated() // without this line by API can send a request and receive a 200
+                .anyRequest().permitAll()
                 .and()
                 .build();
 //        Matcher method + authorization rule
