@@ -1,24 +1,20 @@
 package com.example.ssf.config;
 
-import com.example.ssf.security.filter.ApiKeyFilter;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 
 @Configuration
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig {
 
     @Bean
@@ -27,8 +23,7 @@ public class WebSecurityConfig {
 
         return http.httpBasic()
                 .and()
-                .authorizeRequests()
-                .mvcMatchers("/demo/**").hasAuthority("read")
+                .authorizeRequests().anyRequest().authenticated()
                 .and()
                 .build();
 //        Matcher method + authorization rule
@@ -37,22 +32,22 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public UserDetailsService userDetailsService (){
+    public UserDetailsService userDetailsService() {
 //        class InMemoryUserDetailsManager implements UserDetailsManager, UserDetailsPasswordService
 //        interface UserDetailsManager extends UserDetailsService
         InMemoryUserDetailsManager uds = new InMemoryUserDetailsManager();
 
-        UserDetails u1 = getUserDetails("billy","pass","read");
+        UserDetails u1 = getUserDetails("billy", "pass", "read");
 
 
-        UserDetails u2 = getUserDetails("nader","pass","write");
+        UserDetails u2 = getUserDetails("nader", "pass", "write");
 
         uds.createUser(u1);
         uds.createUser(u2);
         return uds;
     }
 
-    private UserDetails getUserDetails(String name, String password,String authority) {
+    private UserDetails getUserDetails(String name, String password, String authority) {
         return User.withUsername(name)
                 .password(passwordEncoder().encode(password))
                 .authorities(authority)
@@ -60,7 +55,7 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 

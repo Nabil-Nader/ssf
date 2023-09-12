@@ -13,7 +13,7 @@ import java.util.Collection;
 public class ApiKeyAuthentication implements Authentication {
 
 
-    private  boolean authenticated ;
+    private boolean authenticated;
     private final String key;
 
     @Override
